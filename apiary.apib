@@ -1,80 +1,161 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: http://localhost:9000/category/v1
 
-# babe-category-service
+# BABE Category Microservice
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+Category Microservice main goal is to categorize content using TF-IDF method.
+ 
+It should encapsulates all underlying storage & cache and provide convenient interface for content client.
 
-## Questions Collection [/questions]
+# Group Category
 
-### List All Questions [GET]
+## Category Classification [/classify/{artId}]
 
+### Classify by Article ID [POST]
+
+Classify / categorize an article's body using TF-IDF.
+
+**NB:**
+
+- If `artId` is not found, simply return **HTTP 404**.
+ 
++ Parameters
+    + artId (number, required) - Article ID
+ 
 + Response 200 (application/json)
+    + Attributes
+        + cat: 9 (number, required) - Category ID from the classification process. 
+        
++ Response 404 (application/json)
+    Return when `artId` is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
+    + Attributes (DefaultError503)
 
-### Create a New Question [POST]
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+### Classify by Content [POST /classify]
 
+Classify / categorize a string content using TF-IDF.
+
++ Parameters
+    + artId (number, required) - Article ID
+ 
 + Request (application/json)
+    + body: `Lorem Ipsum ...` (string, required) - The string to be categorized.
+ 
++ Response 200 (application/json)
+    + Attributes
+        + cat: 9 (number, required) - Category ID from the classification process.
 
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
++ Response 400 (application/json)
+    Return when parameters requirement not met correctly
+    
+    + Attributes (DefaultError400)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
 
-+ Response 201 (application/json)
+    + Attributes (DefaultError503)
 
-    + Headers
+## Category Retrieval [/list]
 
-            Location: /questions/2
+### Get Categories List [GET]
 
+Get all active categories as an array from DB (`sasha_category`).
+ 
++ Response 200 (application/json)
+    + Attributes (array[Category])
+    
     + Body
+            
+            [
+              {
+                "id": 3,
+                "name": "Terbaru"
+              },
+              {
+                "id": 101,
+                "name": "DKI Jakarta"
+              }
+            ]
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
 
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
+    + Attributes (DefaultError503)
+
+## Category Alteration [{catId}/active]
+
+### Activate Category [PUT]
+
+Activate category in DB.
+
++ Parameters
+    + catId (number, required) - Category ID
+
++ Response 204
+    
++ Response 404 (application/json)
+    Return when `catId` is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+    
+### Deactivate Category [DELETE]
+
+Deactivate category in DB.
+
++ Parameters
+    + catId (number, required) - Category ID
+
++ Response 204
+    
++ Response 404 (application/json)
+    Return when `catId` is not found
+    
+    + Attributes (DefaultError404)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+
+
+# Data Structures
+
+## Category (object)
++ id: `3` (number, required) - Category ID.
++ name: `Terbaru` (string, required) - Category Name.
+
+## Error (object)
++ errCode (number) - Error Code
++ errMsg (string) - Error Message
+
+## DefaultError400 (Error)
++ errCode: `-1`
++ errMsg: Invalid Request
+
+## DefaultError401 (Error)
++ errCode: `-2`
++ errMsg: Authorization needed to access resource
+
+## DefaultError404 (Error)
++ errCode: `-5`
++ errMsg: Resource not found
+
+## DefaultError413 (Error)
++ errCode: `-14`
++ errMsg: Request Entity Too Large
+
+## DefaultError503 (Error)
++ errCode: `-10`
++ errMsg: Backend service is down
