@@ -11,6 +11,9 @@ It should encapsulates all underlying storage & cache and provide convenient int
 
 ## Category Classification [/classify/{artId}]
 
++ Parameters
+    + artId (number, required) - Article ID
+
 ### Classify by Article ID [POST]
 
 Classify / categorize an article's body using TF-IDF.
@@ -18,9 +21,6 @@ Classify / categorize an article's body using TF-IDF.
 **NB:**
 
 - If `artId` is not found, simply return **HTTP 404**.
- 
-+ Parameters
-    + artId (number, required) - Article ID
  
 + Response 200 (application/json)
     + Attributes
@@ -40,12 +40,10 @@ Classify / categorize an article's body using TF-IDF.
 ### Classify by Content [POST /classify]
 
 Classify / categorize a string content using TF-IDF.
-
-+ Parameters
-    + artId (number, required) - Article ID
  
 + Request (application/json)
-    + body: `Lorem Ipsum ...` (string, required) - The string to be categorized.
+    + Attributes
+        + body: `Lorem Ipsum ...` (string, required) - The string to be categorized.
  
 + Response 200 (application/json)
     + Attributes
@@ -88,7 +86,7 @@ Get all active categories as an array from DB (`sasha_category`).
 
     + Attributes (DefaultError503)
 
-## Category Alteration [{catId}/active]
+## Category Alteration [/{catId}/active]
 
 ### Activate Category [PUT]
 
