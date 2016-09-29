@@ -22,9 +22,11 @@ Classify / categorize an article's body using TF-IDF.
 
 - If `artId` is not found, simply return **HTTP 404**.
  
++ Request (application/json)
+    + Attributes (CatClassificationRequest)
+    
 + Response 200 (application/json)
-    + Attributes
-        + cat: 9 (number, required) - Category ID from the classification process. 
+    + Attributes (CatClassificationResponse) 
         
 + Response 404 (application/json)
     Return when `artId` is not found
@@ -42,12 +44,11 @@ Classify / categorize an article's body using TF-IDF.
 Classify / categorize a string content using TF-IDF.
  
 + Request (application/json)
-    + Attributes
+    + Attributes (CatClassificationRequest)
         + body: `Lorem Ipsum ...` (string, required) - The string to be categorized.
  
 + Response 200 (application/json)
-    + Attributes
-        + cat: 9 (number, required) - Category ID from the classification process.
+    + Attributes (CatClassificationResponse)
 
 + Response 400 (application/json)
     Return when parameters requirement not met correctly
@@ -129,6 +130,15 @@ Deactivate category in DB.
 
 
 # Data Structures
+
+## CatClassificationRequest (object)
++ max: `5` (number, optional) - Number of classification returned, default to 1.
+
+## ClassificationCategory (object)
++ id: `9` (number, required) - Category ID.
++ score: `0.51` (number, required) - Category Score
+
+## CatClassificationResponse (array[ClassificationCategory])
 
 ## Category (object)
 + id: `3` (number, required) - Category ID.
