@@ -46,6 +46,7 @@ Classify / categorize a string content using TF-IDF.
 + Request (application/json)
     + Attributes (CatClassificationRequest)
         + body: `Lorem Ipsum ...` (string, required) - The string to be categorized.
+        + sourceId: `8` (number, required) - Source ID
  
 + Response 200 (application/json)
     + Attributes (CatClassificationResponse)
@@ -132,8 +133,7 @@ Deactivate category in DB.
 # Data Structures
 
 ## CatClassificationRequest (object)
-+ max: `5` (number, required) - Number of classification returned, default to 0.
-+ sourceId: `8` (number, required) - Source ID
++ max: `5` (number, optional) - Number of classification returned, default to 1.
 
 ## ClassificationCategory (object)
 + id: `9` (number, required) - Category ID.
