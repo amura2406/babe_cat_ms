@@ -136,10 +136,13 @@ Deactivate category in DB.
 + max: `5` (number, optional) - Number of classification returned, default to 1.
 
 ## ClassificationCategory (object)
-+ id: `9` (number, required) - Category ID.
++ catId: `1116` (number, required) - Category ID.
 + score: `0.51` (number, required) - Category Score
++ entities: katingan, bupati katingan (array[string])
 
-## CatClassificationResponse (array[ClassificationCategory])
+## CatClassificationResponse (object)
++ categories: ClassificationCategory (array[ClassificationCategory]) - Categorization result
++ sourceRank: `1` (number) - Source ranking
 
 ## Category (object)
 + id: `3` (number, required) - Category ID.
