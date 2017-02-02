@@ -45,8 +45,11 @@ Classify / categorize a string content using TF-IDF.
  
 + Request (application/json)
     + Attributes (CatClassificationRequest)
-        + body: `Lorem Ipsum ...` (string, required) - The string to be categorized.
+        + body: `Lorem Ipsum ...` (string, required) - The body of the article.
+        + summary: `Lorem ipsum ...` (string, required) - Summary of the article/video.
+        + title: `Lorem Ipsum ...` (string, required) - Title of the article/video
         + sourceId: `8` (number, required) - Source ID
+        + playlistId: `123` (number) - Playlist ID of the video (optional).        
  
 + Response 200 (application/json)
     + Attributes (CatClassificationResponse)
