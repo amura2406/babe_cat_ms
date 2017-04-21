@@ -63,28 +63,84 @@ Classify / categorize a string content using TF-IDF.
     Return when server has internal error and can't continue fulfilling the request
 
     + Attributes (DefaultError503)
+    
 
-## Category Retrieval [/list]
+## Category Classification Keyword [/keyword]
 
+### Insert or Update Keyword [POST]
+Insert new or update existing TF-IDF keywords. Leave keywordId empty for insert, fill it for update.
+
++ Request (application/json)
+    + Attributes (KeywordRequestUpsert)
+
++ Response 200 (application/json)
+    + Attributes (KeywordResponse)
+
+### Delete Keyword [DELETE]
+Delete existing TF-IDF keywords.
+
++ Request (application/json)
+    + Attributes (KeywordRequestDelete)
+
++ Response 200 (application/json)
+    + Attributes (KeywordResponse)
+
+
+## Category Detail [/detail/{catId}]
++ Parameters
+    + catId: 9 (number, optional) - Category Id
+
+### Get Category Detail [GET]
+
+Get all active categories as an array from DB (`sasha_category` ).
+
++ Response 200 (application/json)
+    + Attributes 
+        + cat (Category, required)
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+## Category Retrieval [/list{?off}{?lim}{?type}{?contentType}{?appId}{?catId}]
++ Parameters
+    + off: 0 (number, optional) - Page Number (default = 0)
+    + lim: 10 (number, optional) - Item Number (default = 10)
+    + appId: 1 (number, optional) - App Id (1 = babe, 2 = durian)
+    + contentType: 1 (number, optional) - Category Content Type ( 1 = article, 2 = video)
+    + catId: 9 (number, optional) - Category Id 
+    + type: 10 (number, optional) - Category Type (default = 10)
+    
 ### Get Categories List [GET]
 
-Get all active categories as an array from DB (`sasha_category`).
+Get all active categories as an array from DB (`sasha_category` ).
  
 + Response 200 (application/json)
-    + Attributes (array[Category])
+    + Attributes 
+        + cats (array[Category], required) 
+        
++ Response 503 (application/json)
+    Return when server has internal error and can't continue fulfilling the request
+
+    + Attributes (DefaultError503)
+
+## Category Upsert [/upsert]
+
+### Upsert Category [PATCH]
+
+Activate category in DB.
+
++ Request (application/json)
+    + Attributes (Category)
     
-    + Body
-            
-            [
-              {
-                "id": 3,
-                "name": "Terbaru"
-              },
-              {
-                "id": 101,
-                "name": "DKI Jakarta"
-              }
-            ]
++ Response 200
+    + Attributes (number)
+    
++ Response 404 (application/json)
+    Return when `catId` is not found
+    
+    + Attributes (DefaultError404)
         
 + Response 503 (application/json)
     Return when server has internal error and can't continue fulfilling the request
@@ -143,13 +199,62 @@ Deactivate category in DB.
 + score: `0.51` (number, required) - Category Score
 + entities: katingan, bupati katingan (array[string])
 
+## KeywordRequestUpsert (object)
++ clusters (array[ClusterKeywordFull])
+
+## KeywordRequestDelete (object)
++ clusters (array[ClusterKeywordIdOnly])
+
+## ClusterKeywordFull (object)
++ clusterId: `1` (number, required) - Cluster ID (TFIFDCategory, toutiao-128, etc.)
++ keywords (array[CategoryKeywordFull])
+
+## ClusterKeywordIdOnly (object)
++ clusterId: `1` (number, required) - Cluster ID (TFIFDCategory, toutiao-128, etc.)
++ keywords (array[CategoryKeywordIdOnly])
+
+## CategoryKeywordFull (object)
++ keywordId: `1` (number, optional) - Keyword ID, fill for update, leave empty for insert
++ categoryId: `4` (number, required)
++ keyword: `nikita mirzani` (string, required)
++ weight: `1.5` (number, required)
+
+## CategoryKeywordIdOnly (object)
++ keywordId: `1` (number, required) - Keyword ID
+
+## KeywordResponse (object)
++ results (array[KeywordResult])
+
+## KeywordResult (object)
++ cluster: `TFIDFCategory` (string) - Cluster name
++ updated: `1` (number) - number of keywrods inserted, updated or deleted
+
+
 ## CatClassificationResponse (object)
 + categories: ClassificationCategory (array[ClassificationCategory]) - Categorization result
 + sourceRank: `1` (number) - Source ranking
 
 ## Category (object)
-+ id: `3` (number, required) - Category ID.
-+ name: `Terbaru` (string, required) - Category Name.
++ catId: `3` (number, required) - Category ID.
++ name: `Hiburan` (string, required) - Category Name.
++ nameEnglish: `Entertainment` (string, required) - English Category Name.
++ icon: `Icon` (string, required) - Category Icon.
++ isParent: 0 (number, required) - Category Status Parent.
++ parentId: 0 (number, required) - Category Parent Id.
++ enabled: 0 (number, required) - Category Status.
++ type: 20 (number, required) - Category Type.
++ priority: 1 (number, required) - Category Priority.
++ timeThreshold: 1 (number, required) - Category Time Threshold.
++ articleThreshold: 1 (number, required) - Category Article Threshold.
++ isStatic: 1 (number, required) - Category Static Status.
++ notifEnabled: 0 (number, required) - Category Status Notif.
++ headerColor: `Priority` (string, required) - Category Header Color.
++ appCategoryId  (array[AppCategoryId]) - Category Mapping 
++ tags:  `tags1`, `tags2` (array[string]) - Category Mapping
+
+## AppCategoryId (object)
++ appId: `3` (number, required) - Category ID.
++ contentTyoe: `2` (number, required) - Category ID.
 
 ## Error (object)
 + errCode (number) - Error Code
