@@ -84,6 +84,14 @@ Delete existing TF-IDF keywords.
 
 + Response 200 (application/json)
     + Attributes (KeywordResponse)
+    
+### List Keywords [POST /keyword/list]
+List existing keywords
++ Request (application/json)
+    + Attributes (KeywordGetRequest)
+
++ Response 200 (application/json)
+    + Attributes (KeywordGetResponse)
 
 
 ## Category Detail [/detail/{catId}]
@@ -199,6 +207,7 @@ Deactivate category in DB.
 + score: `0.51` (number, required) - Category Score
 + entities: katingan, bupati katingan (array[string])
 
+
 ## KeywordRequestUpsert (object)
 + clusters (array[ClusterKeywordFull])
 
@@ -228,6 +237,31 @@ Deactivate category in DB.
 ## KeywordResult (object)
 + cluster: `TFIDFCategory` (string) - Cluster name
 + updated: `1` (number) - number of keywrods inserted, updated or deleted
+
+
+## KeywordGetRequest (object)
++ clusters (array[KeywordGetRequestCluster])
+
+## KeywordGetRequestCluster (object)
++ clusterId: `3` (number) - ID of the cluster
++ categoryIds: `4`,`8` (array[number]) - Category IDs
+
+
+## KeywordGetResponse (object)
++ clusters (array[KeywordGetResponseCluster])
+
+## KeywordGetResponseCluster (object)
++ clusterId: `1` (number)
++ categories (array[KeywordGetResponseCategory])
+
+## KeywordGetResponseCategory (object)
++ categoryId: `1` (number)
++ keywords (array[KeywordGetResponseKeyword])
+
+## KeywordGetResponseKeyword (object)
++ keywordId: `1` (number)
++ keyword: `nikita mirzani` (string)
++ weight: `3.0` (number)
 
 
 ## CatClassificationResponse (object)
